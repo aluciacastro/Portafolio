@@ -1,222 +1,233 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { projectsService } from '../services/api';
 import ProjectCard from './ProjectCard';
-import { Loader2 } from 'lucide-react';
+import api from '../services/api';
 
 const ProjectsSection = () => {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await projectsService.getAll();
-        setProjects(response.data);
-      } catch (err) {
-        console.error('Error fetching projects:', err);
-        setError('Error al cargar proyectos');
-        // Usar datos de ejemplo si falla la API
-        setProjects([
-          {
-            _id: '1',
-            title: 'E-Commerce Platform',
-            description: 'Plataforma completa de comercio electrónico con carrito de compras, pasarela de pagos y panel de administración.',
-            shortDescription: 'Plataforma de e-commerce moderna y escalable',
-            category: 'web',
-            technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Tailwind CSS'],
-            status: 'completado',
-            featured: true,
-            projectUrl: 'https://example.com',
-            githubUrl: 'https://github.com'
-          },
-          {
-            _id: '2',
-            title: 'Task Management App',
-            description: 'Aplicación móvil para gestión de tareas y proyectos con sincronización en tiempo real.',
-            shortDescription: 'App de gestión de tareas con sync en tiempo real',
-            category: 'mobile',
-            technologies: ['React Native', 'Firebase', 'Redux'],
-            status: 'completado',
-            featured: true
-          },
-          {
-            _id: '3',
-            title: 'AI Content Generator',
-            description: 'Herramienta de generación de contenido impulsada por IA para marketing y redes sociales.',
-            shortDescription: 'Generador de contenido con IA',
-            category: 'ai',
-            technologies: ['Python', 'OpenAI', 'FastAPI', 'React'],
-            status: 'en_progreso',
-            featured: false
-          },
-          {
-            _id: '4',
-            title: 'Portfolio CMS',
-            description: 'Sistema de gestión de contenidos especializado para portfolios creativos.',
-            shortDescription: 'CMS para portfolios profesionales',
-            category: 'web',
-            technologies: ['Next.js', 'Strapi', 'PostgreSQL'],
-            status: 'completado',
-            featured: false
-          },
-          {
-            _id: '5',
-            title: 'Crypto Tracker',
-            description: 'Dashboard para seguimiento de criptomonedas con gráficos en tiempo real.',
-            shortDescription: 'Tracker de criptomonedas en tiempo real',
-            category: 'blockchain',
-            technologies: ['Vue.js', 'Web3.js', 'Chart.js'],
-            status: 'completado',
-            featured: true
-          },
-          {
-            _id: '6',
-            title: 'Fitness Tracking Desktop App',
-            description: 'Aplicación de escritorio para seguimiento de ejercicios y progreso físico.',
-            shortDescription: 'App de fitness para escritorio',
-            category: 'desktop',
-            technologies: ['Electron', 'React', 'SQLite'],
-            status: 'mantenimiento',
-            featured: false
-          }
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [loading, setLoading] = useState(true);
 
-    fetchProjects();
-  }, []);
-
-  const categories = [
-    { value: 'all', label: 'Todos' },
-    { value: 'web', label: 'Web' },
-    { value: 'mobile', label: 'Mobile' },
-    { value: 'desktop', label: 'Desktop' },
-    { value: 'ai', label: 'IA' },
-    { value: 'blockchain', label: 'Blockchain' },
+  // Proyectos reales de Adriana con los nombres de archivo exactos
+  const exampleProjects = [
+    {
+      _id: '1',
+      title: 'EnergyAnalytics',
+      slug: 'energy-analytics',
+      shortDescription: 'Sistema de análisis energético con Machine Learning',
+      description: 'Proyecto desarrollado para Hackaton 2025. Sistema completo que incluye funcionalidades web y machine learning con integración entre frontend y backend.',
+      longDescription: 'Sistema de análisis energético que combina visualización de datos en tiempo real con modelos de machine learning para predicción y optimización. Desarrollado con arquitectura moderna de microservicios usando TypeScript en el frontend y Python para los modelos de ML.',
+      image: '/images/projects/energy-analytics.jpg',
+      technologies: ['TypeScript', 'Python', 'React', 'Machine Learning', 'TensorFlow', 'FastAPI'],
+      category: 'Machine Learning',
+      featured: true,
+      status: 'completed',
+      demoUrl: 'https://energy-analitics-2025.vercel.app/',
+      githubUrl: 'https://github.com/ynavier/Hackaton_2025',
+      startDate: '2025-01-01',
+      endDate: '2025-01-15',
+      highlights: [
+        'Análisis predictivo con Machine Learning',
+        'Visualización interactiva de datos energéticos',
+        'Arquitectura de microservicios',
+        'Integración TypeScript-Python robusta'
+      ]
+    },
+    {
+      _id: '2',
+      title: 'Generador de Informes ICBF',
+      slug: 'generador-informes-icbf',
+      shortDescription: 'Sistema automatizado de generación de informes',
+      description: 'Sistema automatizado para la generación de informes profesionales de encuestas de satisfacción para el Instituto Colombiano de Bienestar Familiar (ICBF).',
+      longDescription: 'Herramienta web que automatiza completamente el proceso de generación de informes profesionales. Incluye análisis inteligente de datos, generación automática de gráficas profesionales y formateo institucional según normativas ICBF. Reduce el tiempo de creación de informes de 2 horas a 5 minutos.',
+      image: '/images/projects/generador-icbf.jpg',
+      technologies: ['Python', 'React', 'Node.js', 'Chart.js', 'MongoDB', 'Express'],
+      category: 'Web',
+      featured: true,
+      status: 'completed',
+      githubUrl: 'https://github.com/aluciacastro/GENERADOR-DE-INFORMES',
+      startDate: '2024-07-01',
+      endDate: '2024-10-30',
+      highlights: [
+        'Análisis inteligente automático de encuestas',
+        'Generación de gráficas profesionales',
+        'Formato institucional ICBF (Calibri 11pt)',
+        'Reducción de tiempo de 2h a 5min',
+        'Interfaz web moderna y responsive'
+      ],
+      client: 'Asesorías y Capacitaciones Masiso S.A.S'
+    },
+    {
+      _id: '3',
+      title: 'FinancyBank',
+      slug: 'financy-bank',
+      shortDescription: 'Aplicación móvil de gestión financiera personal',
+      description: 'Aplicación móvil para gestión financiera personal y bancaria desarrollada en Flutter/Dart con interfaz moderna.',
+      longDescription: 'Aplicación completa de gestión financiera que permite controlar cuentas bancarias, establecer presupuestos, visualizar gastos con gráficos interactivos y recibir notificaciones de movimientos importantes. Incluye sincronización offline y diseño material moderno.',
+      image: null, // No hay imagen para este proyecto
+      technologies: ['Flutter', 'Dart', 'Firebase', 'SQLite', 'Provider'],
+      category: 'Mobile',
+      featured: true,
+      status: 'completed',
+      githubUrl: 'https://github.com/aluciacastro/FinancyBank',
+      startDate: '2024-09-01',
+      endDate: '2024-11-30',
+      highlights: [
+        'Gestión completa de finanzas personales',
+        'Presupuestos y categorización automática',
+        'Gráficos interactivos de gastos',
+        'Sincronización offline-first'
+      ]
+    }
   ];
 
-  const filteredProjects = selectedCategory === 'all'
-    ? projects
-    : projects.filter(project => project.category === selectedCategory);
+  const fetchProjects = useCallback(async () => {
+    try {
+      const response = await api.get('/projects');
+      setProjects(response.data);
+      setFilteredProjects(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.log('Using example projects');
+      setProjects(exampleProjects);
+      setFilteredProjects(exampleProjects);
+      setLoading(false);
+    }
+  });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  const categories = [
+    { id: 'all', name: 'Todos' },
+    { id: 'Web', name: 'Web' },
+    { id: 'Mobile', name: 'Mobile' },
+    { id: 'Machine Learning', name: 'Machine Learning' },
+    { id: 'Automatización', name: 'Automatización' },
+  ];
+
+  const filterProjects = (category) => {
+    setSelectedCategory(category);
+    if (category === 'all') {
+      setFilteredProjects(projects);
+    } else {
+      setFilteredProjects(projects.filter(project => project.category === category));
+    }
   };
 
   if (loading) {
     return (
-      <section id="projects" className="section-padding bg-gray-50 dark:bg-dark-950">
-        <div className="container-custom flex items-center justify-center min-h-[400px]">
-          <Loader2 className="w-12 h-12 animate-spin text-primary-600" />
+      <section id="projects" className="py-20 bg-gray-50 dark:bg-slate-800">
+        <div className="container mx-auto px-6">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Cargando proyectos...</p>
+          </div>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="projects" className="section-padding bg-gray-50 dark:bg-dark-950">
-      <div className="container-custom">
+    <section id="projects" className="py-20 bg-gray-50 dark:bg-slate-800">
+      <div className="container mx-auto px-6">
         <motion.div
           ref={ref}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          variants={containerVariants}
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="badge mb-4">Proyectos</span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="section-title"
-          >
-            Mis Trabajos{' '}
-            <span className="gradient-text">Recientes</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="section-subtitle"
-          >
-            Explora algunos de los proyectos en los que he trabajado,
-            desde aplicaciones web hasta soluciones móviles.
-          </motion.p>
+          <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            Proyectos Destacados
+          </h2>
+          <div className="w-20 h-1 bg-gradient-to-r from-primary-500 to-blue-500 mx-auto mb-8"></div>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Soluciones tecnológicas que optimizan procesos y generan valor real
+          </p>
         </motion.div>
 
-        {/* Category Filter */}
+        {/* Filtros de categoría */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           className="flex flex-wrap justify-center gap-3 mb-12"
         >
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <motion.button
-              key={category.value}
-              onClick={() => setSelectedCategory(category.value)}
-              className={`px-6 py-2 rounded-full font-medium transition-all ${
-                selectedCategory === category.value
-                  ? 'bg-primary-600 text-white shadow-lg'
-                  : 'bg-white dark:bg-dark-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-700'
-              }`}
+              key={category.id}
+              onClick={() => filterProjects(category.id)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+              className={`px-6 py-2 rounded-full font-medium transition-all ${
+                selectedCategory === category.id
+                  ? 'bg-gradient-to-r from-primary-500 to-blue-500 text-white shadow-lg'
+                  : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-600 shadow-md'
+              }`}
             >
-              {category.label}
+              {category.name}
             </motion.button>
           ))}
         </motion.div>
 
-        {error && !projects.length && (
-          <div className="text-center text-red-600 dark:text-red-400 mb-8">
-            {error}
-          </div>
+        {/* Grid de proyectos */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProjects.map((project, index) => (
+            <motion.div
+              key={project._id}
+              initial={{ opacity: 0, y: 50 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+            >
+              <ProjectCard project={project} />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Mensaje si no hay proyectos */}
+        {filteredProjects.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-12"
+          >
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              No hay proyectos en esta categoría
+            </p>
+          </motion.div>
         )}
 
-        {/* Projects Grid */}
-        {filteredProjects.length > 0 ? (
-          <motion.div
-            layout
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="text-center mt-16"
+        >
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            ¿Tienes un proyecto en mente?
+          </p>
+          <motion.a
+            href="#contact"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-block px-8 py-4 bg-gradient-to-r from-primary-500 to-blue-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
           >
-            {filteredProjects.map((project, index) => (
-              <ProjectCard
-                key={project._id}
-                project={project}
-                index={index}
-              />
-            ))}
-          </motion.div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              No hay proyectos en esta categoría.
-            </p>
-          </div>
-        )}
+            Hablemos de tu idea
+          </motion.a>
+        </motion.div>
       </div>
     </section>
   );

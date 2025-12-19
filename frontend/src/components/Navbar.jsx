@@ -77,7 +77,7 @@ const Navbar = () => {
               />
             </div>
             <span className="text-xl font-bold font-display gradient-text">
-              Portfolio
+              🖥️ DevAdri 🖥️
             </span>
           </motion.a>
 
