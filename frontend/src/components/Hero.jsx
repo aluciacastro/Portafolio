@@ -47,7 +47,7 @@ const Hero = () => {
       </div>
 
       {/* Contenido principal */}
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-5 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Saludo animado */}
           <motion.div
@@ -56,9 +56,7 @@ const Hero = () => {
             transition={{ delay: 0.1 }}
             className="mb-6"
           >
-            <span className="inline-block px-4 py-2 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-sm font-medium">
-              Bienvenido a mi portafolio 💻
-            </span>
+    
           </motion.div>
 
           {/* Nombre */}
@@ -66,10 +64,11 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-white"
+            className="mt-24 text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-white"
           >
    
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-500 dark:from-primary-400 dark:to-blue-400">
+              
               Adriana Lucia Castro Carreño
             </span>
           </motion.h1>
@@ -91,12 +90,10 @@ const Hero = () => {
             transition={{ delay: 0.4 }}
             className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed"
           >
-            Estudiante de Ingeniería de Sistemas (9no semestre) especializada en desarrollo web 
+            Estudiante de Ingeniería de Sistemas (10mo semestre) especializada en desarrollo web 
             con <span className="font-semibold text-primary-600 dark:text-primary-400">Python</span>, {' '}
             <span className="font-semibold text-primary-600 dark:text-primary-400">React</span> y bases de datos. 
-            Apasionada por crear soluciones tecnológicas que optimizan procesos empresariales.
-            integrando APIs, manejando bases de datos relacionales y desarrollando interfaces claras y funcionales. He trabajado en proyectos orientados a la automatización de procesos, gestión de información y optimización de flujos empresariales, 
-            priorizando código limpio, escalabilidad y una buena experiencia de usuario.
+            Apasionada por crear soluciones tecnológicas integrando APIs, manejando bases de datos relacionales y desarrollando interfaces funcionales que optimizen procesos empresariales . 
           </motion.p>
 
           {/* Enlaces sociales */}
@@ -119,7 +116,7 @@ const Hero = () => {
             </motion.a>
 
             <motion.a
-              href="https://linkedin.com/in/adriana-castro"
+              href="https://linkedin.com/in/adriana-lucia-castro-carreño-453a44399/"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1, y: -2 }}
@@ -205,8 +202,8 @@ const Hero = () => {
       {/* Indicador de scroll */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ delay: 0 }}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
       >
         <motion.button

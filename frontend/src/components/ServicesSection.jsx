@@ -241,17 +241,14 @@ const ServicesSection = () => {
         >
           {[
             {
-              icon: '⚡',
               title: 'Entrega Rápida',
               description: 'Plazos realistas y entregas puntuales para que tu proyecto despegue rápido'
             },
             {
-              icon: '🎯',
               title: 'Código Limpio',
               description: 'Arquitectura escalable y documentada para facilitar el mantenimiento futuro'
             },
             {
-              icon: '💬',
               title: 'Comunicación Clara',
               description: 'Actualizaciones constantes y feedback en cada etapa del desarrollo'
             }
@@ -302,7 +299,7 @@ const ServicesSection = () => {
             </motion.a>
           </div>
           <p className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-            💡 Consulta inicial gratuita • Cotización en 24 horas
+            Consulta inicial gratuita • Cotización en 24 horas
           </p>
         </motion.div>
       </div>

@@ -192,10 +192,10 @@ const CertificationsSection = () => {
                   {edu.institution}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                  📍 {edu.location}
+                   {edu.location}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  📅 {edu.period}
+                  {edu.period}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                   {edu.description}
@@ -241,12 +241,12 @@ const CertificationsSection = () => {
                         const parent = e.target.parentElement;
                         if (parent && !parent.querySelector('.fallback-icon')) {
                           parent.classList.add('bg-gradient-to-br', 'from-primary-100', 'to-blue-100', 'dark:from-primary-900/30', 'dark:to-blue-900/30');
-                          parent.innerHTML = '<div class="text-4xl fallback-icon">🏆</div>';
+                          parent.innerHTML = '<div class="text-4xl fallback-icon">☑︎</div>';
                         }
                       }}
                     />
                   ) : (
-                    <div className="text-4xl">🏆</div>
+                    <div className="text-4xl">☑︎</div>
                   )}
                 </div>
 

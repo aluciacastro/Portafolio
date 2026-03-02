@@ -62,7 +62,6 @@ const AboutSection = () => {
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-primary-500 to-blue-500 mx-auto mb-8"></div>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Desarrolladora apasionada por crear soluciones tecnológicas que mejoran procesos y generan valor
           </p>
         </motion.div>
 
@@ -89,13 +88,7 @@ const AboutSection = () => {
               satisfacción para entidades como el SENA e ICBF, <span className="font-semibold text-primary-600 dark:text-primary-400">
               reduciendo el tiempo de generación de reportes de 2 horas a 5 minutos</span>.
             </p>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-              Mi enfoque combina habilidades técnicas en desarrollo con una comprensión 
-              profunda de las necesidades empresariales, permitiéndome crear soluciones 
-              tecnológicas efectivas y escalables.
-            </p>
-
-            {/* Estadísticas */}
+          {/* Estadísticas */}
             <div className="grid grid-cols-3 gap-4 mt-8">
               {stats.map((stat, index) => (
                 <motion.div
@@ -150,9 +143,6 @@ const AboutSection = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-center"
         >
-          <h3 className="text-2xl font-bold mb-8 text-gray-900 dark:text-white">
-            Tecnologías que Domino
-          </h3>
           <div className="flex flex-wrap justify-center gap-3">
             {technologies.map((tech, index) => (
               <motion.span
@@ -179,7 +169,7 @@ const AboutSection = () => {
           {/* Educación */}
           <div className="p-6 rounded-xl bg-gradient-to-br from-primary-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 shadow-lg">
             <h4 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center">
-              🎓 Formación Académica
+               Formación Académica
             </h4>
             <div className="space-y-4">
               <div>
@@ -204,7 +194,7 @@ const AboutSection = () => {
           {/* Experiencia */}
           <div className="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-900 shadow-lg">
             <h4 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center">
-              💼 Experiencia Profesional
+               Experiencia Profesional
             </h4>
             <div>
               <h5 className="font-semibold text-primary-600 dark:text-primary-400">
